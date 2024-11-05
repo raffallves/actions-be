@@ -19,16 +19,5 @@ jobs:
         run: |
           for template in sam/*; do
             sam build -t "$template/template.yml"
-            deploy_output=$(sam deploy -t "$template/template.yml" --no-confirm-changeset 2>&1)
-            deploy_exit_code=$?
-
-            if [[ $deploy_exit_code -eq 0 ]]; then
-              echo "Deployment for $template completed successfully."
-            elif echo "$deploy_output" | grep -i -q "no changes"; then
-              echo "No changes detected for $template, skipping deployment."
-            else
-              echo "An unexpected error occurred during deployment of $template"
-              echo "Error details: $deploy_output"
-              exit 1
-            fi
+            sam deploy -t "$template/template.yml" --no-confirm-changeset --no-fail-on-empty-changeset
           done
