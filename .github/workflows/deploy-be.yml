@@ -18,6 +18,6 @@ jobs:
       - name: Loop through SAM templates and deploy
         run: |
           for template in sam/*; do
-            sam build -t "$template/template.yaml"
-            sam deploy -t "$template/template.yaml" --no-confirm-changeset
+            sam build -t "$template/template.yml"
+            sam deploy -t "$template/template.yml" --no-confirm-changeset
           done
