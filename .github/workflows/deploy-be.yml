@@ -1,6 +1,10 @@
 name: Deploying lambdas separately
 run-name: lemme c
-on: [push]
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
 jobs:
   Deploying-Lambdas:
     runs-on: ubuntu-latest
