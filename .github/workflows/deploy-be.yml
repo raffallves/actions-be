@@ -8,6 +8,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        uses: aws-actions/setup-sam@v2
+
       - name: Setup AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -15,9 +18,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Loop through SAM templates and deploy
+      - name: Build & Deploy
         run: |
-          for template in sam/*; do
-            sam build -t "$template/template.yml"
-            sam deploy -t "$template/template.yml" --no-confirm-changeset --no-fail-on-empty-changeset
-          done
+          cd sam
+          sam build -t template.yml
+          sam deploy -t template.yml \ 
+          --no-confirm-changeset \ 
+          --no-fail-on-empty-changeset \
+          --parameter-overrides NewAliasName="pr-{{ github.event.pull_request.number }}"

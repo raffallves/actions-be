@@ -1,0 +1,42 @@
+Transform: AWS::Serverless-2016-10-31
+Description: A SAM template for deploying two lambda functions
+
+Parameters:
+  NewAliasName:
+    Type: String
+    Default: "latest"
+
+Resources:
+  Lambda1:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: "lambda1"
+      Handler: index.handler
+      Runtime: nodejs20.x
+      CodeUri: ./lambda1
+      AutoPublishAlias: !Ref NewAliasName
+      AutoPublishCodeSha256: !GetAtt Lambda1.Arn
+      MemorySize: 128
+      Policies:
+        - AWSLambdaBasicExecutionRole
+
+  Lambda2:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: "lambda2"
+      Handler: index.handler
+      Runtime: nodejs20.x
+      CodeUri: ./lambda2
+      AutoPublishAlias: !Ref NewAliasName
+      AutoPublishCodeSha256: !GetAtt Lambda2.Arn
+      MemorySize: 128
+      Policies:
+        - AWSLambdaBasicExecutionRole
+
+Outputs:
+  Lambda1:
+    Description: "ARN of the first Lambda function"
+    Value: !GetAtt Lambda1.Arn
+  Lambda2:
+    Description: "ARN of the second Lambda function"
+    Value: !GetAtt Lambda2.Arn
