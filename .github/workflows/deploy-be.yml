@@ -1,0 +1,23 @@
+name: Deploying lambdas separately
+run-name: lemme c
+on: [push]
+jobs:
+  Deploying-Lambdas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Loop through SAM templates and deploy
+        run: |
+          for template in sam/*; do
+            sam build -t "$template/template.yaml"
+            sam deploy -t "$template/template.yaml" --no-confirm-changeset
+          done
