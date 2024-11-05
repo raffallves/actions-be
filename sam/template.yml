@@ -14,7 +14,7 @@ Resources:
       FunctionName: "lambda1"
       Handler: index.handler
       Runtime: nodejs20.x
-      CodeUri: ./lambda1
+      CodeUri: ../lambda1
       AutoPublishAlias: !Ref NewAliasName
       AutoPublishCodeSha256: !GetAtt Lambda1.Arn
       MemorySize: 128
@@ -27,7 +27,7 @@ Resources:
       FunctionName: "lambda2"
       Handler: index.handler
       Runtime: nodejs20.x
-      CodeUri: ./lambda2
+      CodeUri: ../lambda2
       AutoPublishAlias: !Ref NewAliasName
       AutoPublishCodeSha256: !GetAtt Lambda2.Arn
       MemorySize: 128
