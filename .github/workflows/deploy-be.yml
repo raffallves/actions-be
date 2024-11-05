@@ -20,7 +20,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Echo alias name
-        run: echo ${{ env.ALIAS_NAME }}
+        run: echo "${{ env.ALIAS_NAME }}"
 
       # - name: Build
       #   run: |
