@@ -8,7 +8,7 @@ Resources:
       FunctionName: "lambda2"
       Handler: index.handler
       Runtime: nodejs20.x
-      CodeUri: ./lambda2
+      CodeUri: ../../lambda2
       MemorySize: 128
       Policies:
         - AWSLambdaBasicExecutionRole
