@@ -16,7 +16,6 @@ Resources:
       Runtime: nodejs20.x
       CodeUri: ../lambda1
       AutoPublishAlias: !Ref NewAliasName
-      AutoPublishCodeSha256: !GetAtt Lambda1.Arn
       MemorySize: 128
       Policies:
         - AWSLambdaBasicExecutionRole
@@ -29,7 +28,6 @@ Resources:
       Runtime: nodejs20.x
       CodeUri: ../lambda2
       AutoPublishAlias: !Ref NewAliasName
-      AutoPublishCodeSha256: !GetAtt Lambda2.Arn
       MemorySize: 128
       Policies:
         - AWSLambdaBasicExecutionRole
