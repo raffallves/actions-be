@@ -15,11 +15,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Build & Deploy
+      - name: Build
         run: |
           cd sam
           sam build -t template.yml
+
+      - name: Deploy
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          ALIAS_NAME="pr-${PR_NUMBER}"
           sam deploy -t template.yml \
           --no-confirm-changeset \
           --no-fail-on-empty-changeset \
-          --parameter-overrides NewAliasName="pr-{{ github.event.pull_request.number }}"
+          --parameter-overrides NewAliasName=${ALIAS_NAME}
