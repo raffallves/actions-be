@@ -4,6 +4,10 @@ on: [push]
 jobs:
   Deploying-Lambdas:
     runs-on: ubuntu-latest
+    env:
+      ALIAS_NAME: pr-${{ github.event.pull_request.number }}
+    
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -15,16 +19,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Build
-        run: |
-          cd sam
-          sam build -t template.yml
+      - name: Echo alias name
+        run: echo ${{ env.ALIAS_NAME }}
 
-      - name: Deploy
-        run: |
-          PR_NUMBER=${{ github.event.pull_request.number }}
-          ALIAS_NAME="pr-${PR_NUMBER}"
-          sam deploy -t template.yml \
-          --no-confirm-changeset \
-          --no-fail-on-empty-changeset \
-          --parameter-overrides NewAliasName=${ALIAS_NAME}
+      # - name: Build
+      #   run: |
+      #     cd sam
+      #     sam build -t template.yml
+
+      # - name: Deploy
+      #   run: |
+      #     PR_NUMBER=${{ github.event.pull_request.number }}
+      #     ALIAS_NAME="pr-${PR_NUMBER}"
+      #     sam deploy -t template.yml \
+      #     --no-confirm-changeset \
+      #     --no-fail-on-empty-changeset \
+      #     --parameter-overrides NewAliasName=${ALIAS_NAME}
