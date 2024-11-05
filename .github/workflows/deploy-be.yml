@@ -20,6 +20,6 @@ jobs:
           cd sam
           sam build -t template.yml
           sam deploy -t template.yml \
-          --no-confirm-changeset \ 
+          --no-confirm-changeset \
           --no-fail-on-empty-changeset \
           --parameter-overrides NewAliasName="pr-{{ github.event.pull_request.number }}"
