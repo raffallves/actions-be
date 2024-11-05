@@ -23,13 +23,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Build
+      - name: Build & Deploy
         run: |
           cd sam
           sam build -t template.yml
-
-      - name: Deploy
-        run: |
           sam deploy -t template.yml \
           --no-confirm-changeset \
           --no-fail-on-empty-changeset \
