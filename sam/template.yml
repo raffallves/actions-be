@@ -33,11 +33,16 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
 
+  Lambda1Version:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !Ref Lambda1
+
   Lambda1Alias:
     Type: AWS::Lambda::Alias
     Properties:
       FunctionName: !Ref Lambda1
-      FunctionVersion: !GetAtt Lambda1.Version
+      FunctionVersion: !Ref Lambda1Version
       Name: !Ref PRId
       Description: !Sub "Alias for ${PRId}"
 
@@ -49,11 +54,16 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
 
+  Lambda2Version:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !Ref Lambda2
+
   Lambda2Alias:
     Type: AWS::Lambda::Alias
     Properties:
       FunctionName: !Ref Lambda2
-      FunctionVersion: !GetAtt Lambda2.Version
+      FunctionVersion: !Ref Lambda2Version
       Name: !Ref PRId
       Description: !Sub "Alias for ${PRId}"
 
