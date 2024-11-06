@@ -22,7 +22,6 @@ Globals:
   Function:
     Handler: index.handler
     Runtime: nodejs20.x
-    AutoPublishAlias: !Ref PRId
     MemorySize: 128
 
 Resources:
@@ -31,28 +30,32 @@ Resources:
     Properties:
       FunctionName: "lambda1"
       CodeUri: ../lambda1
-      AutoPublishAliasAllProperties: true
-      Description: 
-        Fn::If:
-          - IsTest
-          - !Sub "Version for ${PRId}"
-          - "Default lambda description"
       Policies:
         - AWSLambdaBasicExecutionRole
+
+  Lambda1Alias:
+    Type: AWS::Lambda::Alias
+    Properties:
+      FunctionName: !GetAtt Lambda1.FunctionName
+      FunctionVersion: !GetAtt Lambda1.Version
+      Name: !Ref PRId
+      Description: !Sub "Alias for ${PRId}"
 
   Lambda2:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: "lambda2"
       CodeUri: ../lambda2
-      AutoPublishAliasAllProperties: true
-      Description: 
-        Fn::If:
-          - IsTest
-          - !Sub "Version for ${PRId}"
-          - "Default lambda description"
       Policies:
         - AWSLambdaBasicExecutionRole
+
+  Lambda2Alias:
+    Type: AWS::Lambda::Alias
+    Properties:
+      FunctionName: !GetAtt Lambda2.FunctionName
+      FunctionVersion: !GetAtt Lambda2.Version
+      Name: !Ref PRId
+      Description: !Sub "Alias for ${PRId}"
 
 Outputs:
   Lambda1:
