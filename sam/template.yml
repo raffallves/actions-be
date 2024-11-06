@@ -10,10 +10,7 @@ Parameters:
   
   Environment:
     Type: String
-    AllowedValues:
-      - test
-      - qa
-      - prod
+    AllowedValues: [test, qa, prod]
     Description: "The deployment environment"
 
 Conditions:
@@ -38,6 +35,7 @@ Resources:
         Fn::If:
           - IsTest
           - !Sub "Version for ${PRId}"
+          - "Default lambda description"
       Policies:
         - AWSLambdaBasicExecutionRole
 
@@ -50,6 +48,7 @@ Resources:
         Fn::If:
           - IsTest
           - !Sub "Version for ${PRId}"
+          - "Default lambda description"
       Policies:
         - AWSLambdaBasicExecutionRole
 
