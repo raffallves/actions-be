@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: A SAM template for deploying two lambda functions
+
+Parameters:
+  PRId:
+    Type: String
+    Default: "latest"
+    Description: "The unique PR identifier"
+  
+  Environment:
+    Type: String
+    AllowedValues: [test, qa, prod]
+    Description: "The deployment environment"
+
+Conditions:
+  IsTest: !Equals [ !Ref Environment, "test" ]
+  IsQA: !Equals [ !Ref Environment, "qa" ]
+  IsProd: !Equals [ !Ref Environment, "prod" ]
+
+Globals:
+  Function:
+    Handler: index.handler
+    Runtime: nodejs20.x
+    AutoPublishAlias: !Ref PRId
+    MemorySize: 128
+
+Resources:
+  Lambda1:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: "lambda1"
+      CodeUri: ../lambda1
+      AutoPublishAliasAllProperties: true
+      Description: 
+        Fn::If:
+          - IsTest
+          - !Sub "Version for ${PRId}"
+          - "Default lambda description"
+      Policies:
+        - AWSLambdaBasicExecutionRole
+
+  Lambda2:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: "lambda2"
+      CodeUri: ../lambda2
+      AutoPublishAliasAllProperties: true
+      Description: 
+        Fn::If:
+          - IsTest
+          - !Sub "Version for ${PRId}"
+          - "Default lambda description"
+      Policies:
+        - AWSLambdaBasicExecutionRole
+
+Outputs:
+  Lambda1:
+    Description: "ARN of the first Lambda function"
+    Value: !GetAtt Lambda1.Arn
+  Lambda2:
+    Description: "ARN of the second Lambda function"
+    Value: !GetAtt Lambda2.Arn

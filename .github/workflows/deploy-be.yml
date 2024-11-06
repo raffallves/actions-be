@@ -1,0 +1,30 @@
+name: Deploying lambdas separately
+run-name: lemme c
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  Deploying-Lambdas:
+    runs-on: ubuntu-latest
+    env:
+      PR_ID: pr${{ github.event.pull_request.number }}
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Build & Deploy
+        run: |
+          cd sam
+          sed -i "s/{PR_ID}/${{ env.PR_ID }}/g" samconfig.toml # sets PR id to use as function alias
+          sam build
+          sam deploy
