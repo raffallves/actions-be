@@ -36,7 +36,7 @@ Resources:
   Lambda1Alias:
     Type: AWS::Lambda::Alias
     Properties:
-      FunctionName: !GetAtt Lambda1.FunctionName
+      FunctionName: !Ref Lambda1
       FunctionVersion: !GetAtt Lambda1.Version
       Name: !Ref PRId
       Description: !Sub "Alias for ${PRId}"
@@ -52,7 +52,7 @@ Resources:
   Lambda2Alias:
     Type: AWS::Lambda::Alias
     Properties:
-      FunctionName: !GetAtt Lambda2.FunctionName
+      FunctionName: !Ref Lambda2
       FunctionVersion: !GetAtt Lambda2.Version
       Name: !Ref PRId
       Description: !Sub "Alias for ${PRId}"
