@@ -1,4 +1,5 @@
 version = 0.1
+
 [default.deploy.parameters]
 stack_name = "sam-app"
 resolve_s3 = true
@@ -8,3 +9,6 @@ confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 disable_rollback = true
 image_repositories = []
+parameter_overrides = "Environment=test PRId={PR_ID}"
+no_fail_on_empty_changeset = true
+no_confirm_changeset = true

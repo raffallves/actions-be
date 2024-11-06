@@ -3,15 +3,29 @@ Transform: AWS::Serverless-2016-10-31
 Description: A SAM template for deploying two lambda functions
 
 Parameters:
-  NewAliasName:
+  PRId:
     Type: String
     Default: "latest"
+    Description: "The unique PR identifier"
+  
+  Environment:
+    Type: String
+    AllowedValues:
+      - test
+      - qa
+      - prod
+    Description: "The deployment environment"
+
+Conditions:
+  IsTest: !Equals [ !Ref Environment, "test" ]
+  IsQA: !Equals [ !Ref Environment, "qa" ]
+  IsProd: !Equals [ !Ref Environment, "prod" ]
 
 Globals:
   Function:
     Handler: index.handler
     Runtime: nodejs20.x
-    AutoPublishAlias: !Ref NewAliasName
+    AutoPublishAlias: !Ref PRId
     MemorySize: 128
 
 Resources:
@@ -20,6 +34,10 @@ Resources:
     Properties:
       FunctionName: "lambda1"
       CodeUri: ../lambda1
+      VersionDescription: 
+        Fn::If:
+          - IsTest
+          - !Sub "Version for ${PRId}"
       Policies:
         - AWSLambdaBasicExecutionRole
 
@@ -28,6 +46,10 @@ Resources:
     Properties:
       FunctionName: "lambda2"
       CodeUri: ../lambda2
+      VersionDescription: 
+        Fn::If:
+          - IsTest
+          - !Sub "Version for ${PRId}"
       Policies:
         - AWSLambdaBasicExecutionRole
 

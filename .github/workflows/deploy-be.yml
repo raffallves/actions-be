@@ -25,8 +25,6 @@ jobs:
       - name: Build & Deploy
         run: |
           cd sam
+          sed -i "s/{PR_ID}/${{ env.PR_ID }}/g" samconfig.toml # sets PR id to use as function alias
           sam build
-          sam deploy \
-          --no-confirm-changeset \
-          --no-fail-on-empty-changeset \
-          --parameter-overrides NewAliasName=${{ env.PR_ID }}
+          sam deploy
