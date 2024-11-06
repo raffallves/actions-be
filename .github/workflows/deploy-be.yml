@@ -27,4 +27,4 @@ jobs:
           cd sam
           sed -i "s/{PR_ID}/${{ env.PR_ID }}/g" samconfig.toml # sets PR id to use as function alias
           sam build
-          sam deploy
+          sam deploy --no-fail-on-empty-changeset
