@@ -32,6 +32,7 @@ Resources:
       FunctionName: "lambda1"
       CodeUri: ../lambda1
       AutoPublishAliasAllProperties: true
+      Description: !Sub "Deployed at ${AWS::Timestamp}"
       VersionDescription: 
         Fn::If:
           - IsTest
@@ -46,6 +47,7 @@ Resources:
       FunctionName: "lambda2"
       CodeUri: ../lambda2
       AutoPublishAliasAllProperties: true
+      Description: !Sub "Deployed at ${AWS::Timestamp}"
       VersionDescription: 
         Fn::If:
           - IsTest
