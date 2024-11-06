@@ -42,7 +42,7 @@ Resources:
     Type: AWS::Lambda::Alias
     Properties:
       FunctionName: !Ref Lambda1
-      FunctionVersion: !Ref Lambda1Version
+      FunctionVersion: !GetAtt Lambda1Version.Version
       Name: !Ref PRId
       Description: !Sub "Alias for ${PRId}"
 
@@ -63,7 +63,7 @@ Resources:
     Type: AWS::Lambda::Alias
     Properties:
       FunctionName: !Ref Lambda2
-      FunctionVersion: !Ref Lambda2Version
+      FunctionVersion: !GetAtt Lambda2Version.Version
       Name: !Ref PRId
       Description: !Sub "Alias for ${PRId}"
 
