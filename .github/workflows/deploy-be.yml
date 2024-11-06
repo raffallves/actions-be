@@ -9,7 +9,7 @@ jobs:
   Deploying-Lambdas:
     runs-on: ubuntu-latest
     env:
-      ALIAS_NAME: pr-${{ github.event.pull_request.number }}
+      PR_ID: pr${{ github.event.pull_request.number }}
     
     steps:
       - name: Checkout repo
@@ -29,4 +29,4 @@ jobs:
           sam deploy \
           --no-confirm-changeset \
           --no-fail-on-empty-changeset \
-          --parameter-overrides NewAliasName=${{ env.ALIAS_NAME }}
+          --parameter-overrides NewAliasName=${{ env.PR_ID }}
