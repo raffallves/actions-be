@@ -31,6 +31,7 @@ Resources:
     Properties:
       FunctionName: "lambda1"
       CodeUri: ../lambda1
+      AutoPublishAliasAllProperties: true
       VersionDescription: 
         Fn::If:
           - IsTest
@@ -44,6 +45,7 @@ Resources:
     Properties:
       FunctionName: "lambda2"
       CodeUri: ../lambda2
+      AutoPublishAliasAllProperties: true
       VersionDescription: 
         Fn::If:
           - IsTest
