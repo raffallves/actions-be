@@ -22,30 +22,35 @@ jobs:
 
       - name: Filter lambdas to deploy to test env
         id: filter
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
-          head: ${{ github.sha }}
           filters: |
             changed_dirs:
               - '**'
-              exclude:
-                - 'sam/**'
-                - '.github/**'
-                - package.json
-                - package-lock.json
-                - .gitignore
+              - '!sam/**'
+              - '!.github/**'
+              - '!package.json'
+              - '!package-lock.json'
+              - '!.gitignore'
+              
   
   deploy:
     runs-on: ubuntu-latest
     needs: changes
-    if: ${{ needs.changes.outputs.changed_lambdas != '' }}
+    if: ${{ needs.changes.outputs.changed_lambdas == 'true' }}
     strategy:
       matrix:
         directory: ${{ fromJson(needs.changes.outputs.changed_lambdas) }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+      
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       - name: Deploy ${{ matrix.directory }} function
         run: |
