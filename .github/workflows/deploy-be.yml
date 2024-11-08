@@ -24,6 +24,8 @@ jobs:
         id: filter
         uses: dorny/paths-filter@v2
         with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          head: ${{ github.sha }}
           filters: |
             changed_dirs:
               - '**'
@@ -37,10 +39,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: changes
-    if: needs.changes.outputs.changed_lambdas == 'true'
+    if: ${{ needs.changes.outputs.changed_lambdas != '' }}
     strategy:
       matrix:
-        directory: ${{ fromJson(needs.filter.outputs.changed_lambdas) }}
+        directory: ${{ fromJson(needs.changes.outputs.changed_lambdas) }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
