@@ -15,7 +15,8 @@ jobs:
       pull-requests: read
       contents: read
     outputs:
-      changed_lambdas: ${{ steps.filter.outputs.changed_dirs }}
+      changed: ${{ steps.filter.outputs.changed_dirs }}
+      changed_files: ${{ steps.filter.outputs.changed_dirs_files }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -37,10 +38,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: changes
-    if: ${{ needs.changes.outputs.changed_lambdas == 'true' }}
+    if: ${{ needs.changes.outputs.changed == 'true' }}
     strategy:
       matrix:
-        directory: ${{ fromJson(needs.changes.outputs.changed_lambdas) }}
+        directory: ${{ fromJson(needs.changes.outputs.changed_files) }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
