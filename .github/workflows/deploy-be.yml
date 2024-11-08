@@ -1,30 +1,53 @@
 name: Deploying lambdas separately
 run-name: lemme c
 
+env:
+  PR_ID: pr${{ github.event.pull_request.number }}
+
 on:
   pull_request:
     types: [opened, synchronize]
 
 jobs:
-  Deploying-Lambdas:
+  changes:
     runs-on: ubuntu-latest
-    env:
-      PR_ID: pr${{ github.event.pull_request.number }}
-    
+    permissions:
+      pull-requests: read
+      contents: read
+    outputs:
+      changed_lambdas: ${{ steps.filter.outputs.changed_dirs }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup AWS CLI
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Filter lambdas to deploy to test env
+        id: filter
+        uses: dorny/paths-filter@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          filters: |
+            changed_dirs:
+              - '**'
+              exclude:
+                - 'sam/**'
+                - '.github/**'
+                - package.json
+                - package-lock.json
+                - .gitignore
+  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.changed_lambdas == 'true'
+    strategy:
+      matrix:
+        directory: ${{ fromJson(needs.filter.outputs.changed_lambdas) }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Build & Deploy
+      - name: Deploy ${{ matrix.directory }} function
         run: |
-          cd sam
-          sed -i "s/{PR_ID}/${{ env.PR_ID }}/g" samconfig.toml # sets PR id to use as function alias
-          sam build
-          sam deploy --no-fail-on-empty-changeset
+          cd ${{ matrix.directory }}
+          aws lambda update-function-code \
+            --function-name ${{ matrix.directory }} \
+            --zip-file fileb://index.mjs
