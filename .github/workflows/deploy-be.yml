@@ -18,7 +18,7 @@ jobs:
       changed: ${{ steps.filter.outputs.changed_dirs }}
       changed_files: ${{ steps.filter.outputs.changed_dirs_files }}
     steps:
-    
+
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -39,7 +39,6 @@ jobs:
         run: |
           echo "Changed?: ${{ steps.filter.outputs.changed }}"
           echo "Changed files: ${{ steps.filter.outputs.changed_files }}"
-          echo "Full event: ${{ toJson(github.event) }}"
               
   
   deploy:
