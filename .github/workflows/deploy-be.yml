@@ -37,8 +37,8 @@ jobs:
 
       - name: Debug outputs
         run: |
-          echo "Changed?: ${{ steps.filter.outputs.changed }}"
-          echo "Changed files: ${{ steps.filter.outputs.changed_files }}"
+          echo "Changed?: ${{ steps.filter.outputs.changed_dirs }}"
+          echo "Changed files: ${{ steps.filter.outputs.changed_dirs_files }}"
               
   
   deploy:
