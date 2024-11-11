@@ -1,0 +1,41 @@
+version = 0.1
+
+[default.validate.parameters]
+lint = true
+region = "us-east-1"
+
+[default.build.parameters]
+parallel = true
+
+[qa.deploy.parameters]
+region = "us-east-1"
+resolve_s3 = true
+s3_prefix = "qa"
+stack_name = "qa"
+capabilities = "CAPABILITY_IAM"
+disable_rollback = false
+image_repositories = []
+parameter_overrides = "Environment=qa"
+no_confirm_changeset = true
+
+[prod-blue.deploy.parameters]
+resolve_s3 = true
+s3_prefix = "prod-blue"
+stack_name = "prod-blue"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+disable_rollback = false
+image_repositories = []
+parameter_overrides = "Environment=prod DeploymentTarget=blue"
+no_confirm_changeset = true
+
+[prod-green.deploy.parameters]
+resolve_s3 = true
+s3_prefix = "prod-green"
+stack_name = "prod-green"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+disable_rollback = false
+image_repositories = []
+parameter_overrides = "Environment=prod DeploymentTarget=green"
+no_confirm_changeset = true

@@ -1,0 +1,67 @@
+name: Deploying lambdas separately
+run-name: lemme c
+
+env:
+  PR_ID: pr${{ github.event.pull_request.number }}
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+      contents: read
+    outputs:
+      changed: ${{ steps.filter.outputs.changed_dirs }}
+      changed_files: ${{ steps.filter.outputs.changed_dirs_files }}
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Filter lambdas to deploy to test env
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            changed_dirs:
+              - '**/*'
+              - '!sam/**'
+              - '!.github/**'
+              - '!package.json'
+              - '!package-lock.json'
+              - '!.gitignore'
+
+      - name: Debug outputs
+        run: |
+          echo "Changed?: ${{ steps.filter.outputs.changed_dirs }}"
+          echo "Changed files: ${{ steps.filter.outputs.changed_dirs_files }}"
+              
+  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.changed == 'true' }}
+    strategy:
+      matrix:
+        directory: ${{ fromJson(needs.changes.outputs.changed_files) }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy ${{ matrix.directory }} function
+        run: |
+          cd ${{ matrix.directory }}
+          aws lambda update-function-code \
+            --function-name ${{ matrix.directory }} \
+            --zip-file fileb://index.mjs

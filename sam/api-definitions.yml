@@ -1,0 +1,70 @@
+openapi: 3.0.1
+info:
+  title: Back End API
+  description: An API
+  contact:
+    name: Rafael Alves
+    email: rafael@rafalves.com
+  version: 1.0.0
+tags:
+  - name: lambda1
+    description: First function
+  - name: lambda2
+    description: Second function
+paths:
+  /lambda1:
+    post:
+      tags:
+        - lambda1
+      summary: Get the lambda version
+      description: Get the lambda name and, again, the version
+      operationId: getLambda1
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Lambda3.Arn}/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+        timeoutInMillis: 29000
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+  /lambda2:
+    post:
+      tags:
+        - lambda2
+      summary: Get the lambda version
+      description: Get the lambda version and, also, its name
+      operationId: getLambda2
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Lambda4.Arn}/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+        timeoutInMillis: 29000
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+x-amazon-apigateway-cors:
+  allowOrigins: 
+    - "*"
+  allowMethods:
+    - "GET"
+    - "POST"
+    - "OPTIONS"
+  allowHeaders:
+    - "x-amzm-header"
+    - "x-apigateway-header"
+    - "x-api-key"
+    - "authorization"
+    - "x-amz-date"
+    - "content-type"
