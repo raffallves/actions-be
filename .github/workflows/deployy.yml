@@ -1,0 +1,30 @@
+name: Release Pipeline
+run-name: lemme a
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  process-release:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Extract and print the release version
+      - name: Extract Major Version
+        id: extract_version
+        run: |
+          release_version=${{ github.event.release.tag_name }}
+          
+          major_version=$(echo "$release_version" | cut -d '.' -f1 | sed 's/^v//')
+          
+          echo "Major Version: $major_version"
+          echo "::set-output name=major_version::$major_version"
+
+      # Step 3: Use the extracted version
+      - name: Print Major Version
+        run: |
+          echo "The major version is ${{ steps.extract_version.outputs.major_version }}"
