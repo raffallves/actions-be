@@ -31,6 +31,7 @@ jobs:
 
       - name: Update samconfig.toml
         run: |
+          cd sam
           sed -i "s|\${STACK_NAME}|stack-${{ github.environment.name }}-${{ steps.extract_version.outputs.major_version }}|g" samconfig.toml
 
   approval:
