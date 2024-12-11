@@ -29,6 +29,10 @@ jobs:
         run: |
           echo "The major version is ${{ steps.extract_version.outputs.major_version }}"
 
+      - name: Update samconfig.toml
+        run: |
+          sed -i "s|\${STACK_NAME}|stack-${{ github.environment.name }}-${{ steps.extract_version.outputs.major_version }}|g" samconfig.toml
+
   approval:
     needs: process-release  # Waits for the 'process-release' job to complete
     runs-on: ubuntu-latest
