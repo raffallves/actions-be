@@ -33,6 +33,7 @@ jobs:
         run: |
           cd sam
           sed -i "s|\${STACK_NAME}|stack-${{ github.environment.name }}-${{ steps.extract_version.outputs.major_version }}|g" samconfig.toml
+          cat samconfig.toml
 
   approval:
     needs: process-release  # Waits for the 'process-release' job to complete
