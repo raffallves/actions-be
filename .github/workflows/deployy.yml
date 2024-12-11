@@ -28,3 +28,20 @@ jobs:
       - name: Print Major Version
         run: |
           echo "The major version is ${{ steps.extract_version.outputs.major_version }}"
+
+  approval:
+    needs: process-release  # Waits for the 'process-release' job to complete
+    runs-on: ubuntu-latest
+    steps:
+      - name: Approval Required
+        run: |
+          echo "Awaiting manual approval. Click 'Approve and Run' to proceed with ${{ secrets.ENV_VAR }}."
+    environment:
+      name: production
+
+  post-approval-job:
+    needs: approval
+    runs-on: ubuntu-latest
+    steps:
+      - name: Perform Post-Approval Tasks
+        run: echo "Manual approval received. Proceeding with deployment."
