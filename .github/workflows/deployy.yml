@@ -37,7 +37,7 @@ jobs:
         run: |
           echo "Awaiting manual approval. Click 'Approve and Run' to proceed with ${{ secrets.ENV_VAR }}."
     environment:
-      name: production
+      name: prod
 
   post-approval-job:
     needs: approval
