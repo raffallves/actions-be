@@ -1,2 +1,2 @@
 [default.deploy.params]
-stack_name = ${STACK_NAME}
+stack_name = stack-prod-v${MAJOR_VERSION}
